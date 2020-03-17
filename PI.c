@@ -1,5 +1,5 @@
-#include "omp.h"
-#include "stdio.h"
+#include  <stdio.h>
+#include  <omp.h>
 #include "stdlib.h"
 
 double points = 0;
@@ -24,17 +24,17 @@ void* numbers_in(void *arg) {
 	sum+=p_in;
 }
 
-void main( int argc, const char* argv[] )
+int main(int argc, char *argv[])
 {
-	int threads = atof(argv[2]);
-	points = atof(argv[1]);
+  int threads = atof(argv[2]);
+  points = atof(argv[1]);
 
-  #pragma omp prallel num_threads(threads){
+  #pragma omp parallel num_threads(threads)
+  {
     int ID = omp_get_thread_num();
-
-    printf(" hello (%d)\n", ID);
-    printf(" points: %lf \n", points);
-    printf(" points in: %lf \n", sum);
-    printf(" PI estimation: %lf \n", sum/points * 4.0);
+    numbers_in((void*)&threads);
   }
+  printf(" points: %lf \n", points);
+  printf(" points in: %lf \n", sum);
+  printf(" PI estimation: %lf \n", sum/points * 4.0);
 }
