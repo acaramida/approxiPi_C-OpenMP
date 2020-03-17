@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-  double num_steps = 1000;
+  double num_steps = atof(argv[1]);
   double sum = 0.0;
 
   unsigned int seed = omp_get_wtime();
@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
   for (int i = 0; i < num_steps; i++) {
       double x = ((double)rand_r(&seed) / RAND_MAX);
       double y = ((double)rand_r(&seed) / RAND_MAX);
-      
+
       if((1-x)*(1-x) + (1-y)*(1-y) <= 1) {
         sum++;
       }
