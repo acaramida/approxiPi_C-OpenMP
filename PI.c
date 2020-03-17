@@ -13,12 +13,12 @@ void* numbers_in(void *arg) {
 
 	for( int i = 0; i < points/ *threads; i++ )
 	{
-			double x = ((double)rand_r(&seed) / RAND_MAX);
-      double y = ((double)rand_r(&seed) / RAND_MAX);
+		double x = ((double)rand_r(&seed) / RAND_MAX);
+      		double y = ((double)rand_r(&seed) / RAND_MAX);
 
-			if(x * x + y * y <= 1) {
-				p_in++;
-			}
+		if(x * x + y * y <= 1) {
+			p_in++;
+		}
 	}
 
 	sum+=p_in;
@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
     int ID = omp_get_thread_num();
     numbers_in((void*)&threads);
   }
+
   printf(" points: %lf \n", points);
   printf(" points in: %lf \n", sum);
   printf(" PI estimation: %lf \n", sum/points * 4.0);
