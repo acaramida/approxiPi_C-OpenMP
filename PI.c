@@ -9,12 +9,12 @@ double numbers_in(int *threads, int *points) {
 
 	for( int i = 0; i < *points; i++ )
 	{
-			double x = ((double)rand_r(&seed) / RAND_MAX);
-      double y = ((double)rand_r(&seed) / RAND_MAX);
+		double x = ((double)rand_r(&seed) / RAND_MAX);
+      		double y = ((double)rand_r(&seed) / RAND_MAX);
 
-			if(x * x + y * y <= 1) {
-				p_in++;
-			}
+		if(x * x + y * y <= 1) {
+			p_in++;
+		}
 	}
 
 	return p_in;
