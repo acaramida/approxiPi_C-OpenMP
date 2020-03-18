@@ -2,7 +2,7 @@
 #include  <omp.h>
 #include "stdlib.h"
 
-double numbers_in(int *threads, int *points) {
+double numbers_in(long *points) {
 
 	unsigned int seed = (unsigned int)omp_get_wtime();
 	double p_in = 0;
@@ -24,14 +24,15 @@ int main(int argc, char *argv[])
 {
   int threads = atoi(argv[2]);
   double points = atof(argv[1]);
-	int points_per_thread = points/threads;
+	long points_per_thread = points/threads;
 	double sum = 0.0;
   #pragma omp parallel num_threads(threads)
   {
     int ID = omp_get_thread_num();
-		double p_in = numbers_in(&threads, &points_per_thread);
+		double p_in = numbers_in(&points_per_thread);
 		#pragma omp atomic
-    sum += p_in;
+    	sum += p_in;
+		
   }
 
   printf(" points: %.10e \n", points);
