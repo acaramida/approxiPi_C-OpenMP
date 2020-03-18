@@ -2,16 +2,12 @@
 #include  <omp.h>
 #include "stdlib.h"
 
-double points = 0;
-double sum = 0;
-
-void* numbers_in(void *arg) {
+double numbers_in(int *threads, int *points) {
 
 	unsigned int seed = (unsigned int)omp_get_wtime();
 	double p_in = 0;
-	int *threads = (int*)arg;
 
-	for( int i = 0; i < points/ *threads; i++ )
+	for( int i = 0; i < *points; i++ )
 	{
 			double x = ((double)rand_r(&seed) / RAND_MAX);
       double y = ((double)rand_r(&seed) / RAND_MAX);
@@ -21,20 +17,24 @@ void* numbers_in(void *arg) {
 			}
 	}
 
-	sum+=p_in;
+	return p_in;
 }
 
 int main(int argc, char *argv[])
 {
-  int threads = atof(argv[2]);
-  points = atof(argv[1]);
-
+  int threads = atoi(argv[2]);
+  double points = atof(argv[1]);
+	int points_per_thread = points/threads;
+	double sum = 0.0;
   #pragma omp parallel num_threads(threads)
   {
     int ID = omp_get_thread_num();
-    numbers_in((void*)&threads);
+		double p_in = numbers_in(&threads, &points_per_thread);
+		#pragma omp atomic
+    sum += p_in;
   }
-  printf(" points: %lf \n", points);
-  printf(" points in: %lf \n", sum);
+
+  printf(" points: %.10e \n", points);
+  printf(" points in: %.10e \n", sum);
   printf(" PI estimation: %lf \n", sum/points * 4.0);
 }
