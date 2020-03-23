@@ -1,6 +1,6 @@
 #include  <stdio.h>
 #include  <omp.h>
-#include "stdlib.h"
+#include <stdlib.h>
 
 double numbers_in(long *points) {
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 		double p_in = numbers_in(&points_per_thread);
 		#pragma omp atomic
     	sum += p_in;
-		
+
   }
 
   printf(" points: %.10e \n", points);
