@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
 	flags = 0;
 	threads = 1;
-	points = 0;
+	points = 1000;
 
 	int option;
 	while ((option = getopt(argc, argv, "p:t:b")) != -1)
@@ -36,26 +36,22 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	long points_per_thread = points / threads;
 	long sum = 0;
 
-#pragma omp parallel num_threads(threads)
+#pragma omp parallel num_threads(threads) reduction(+:sum)
 	{
 		unsigned int seed = (unsigned int)omp_get_wtime();
-		double p_in = 0;
-
-		for (int i = 0; i < points_per_thread; i++)
+#pragma omp for
+		for (int i = 0; i < (int)points; i++)
 		{
 			double x = ((double)rand_r(&seed) / RAND_MAX);
 			double y = ((double)rand_r(&seed) / RAND_MAX);
 
 			if (x * x + y * y <= 1)
 			{
-				p_in++;
+				sum++;
 			}
 		}
-#pragma omp atomic
-		sum += p_in;
 	}
 
 	clock_gettime(CLOCK_MONOTONIC, &end);
