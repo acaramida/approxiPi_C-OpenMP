@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 	{
 		unsigned int seed = (unsigned int)omp_get_wtime();
 #pragma omp for
-		for (int i = 0; i < (int)points; i++)
+		for (long i = 0; i < (long)points; i++)
 		{
 			double x = ((double)rand_r(&seed) / RAND_MAX);
 			double y = ((double)rand_r(&seed) / RAND_MAX);
