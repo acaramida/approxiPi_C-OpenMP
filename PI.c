@@ -10,11 +10,11 @@ int main(int argc, char *argv[])
 	clock_gettime(CLOCK_MONOTONIC, &start);
 
 	int flags, threads;
-	double points;
+	double num_steps;
 
 	flags = 0;
 	threads = 1;
-	points = 1000;
+	num_steps = 1000;
 
 	int option;
 	while ((option = getopt(argc, argv, "p:t:b")) != -1)
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 		switch (option)
 		{
 		case 'p':
-			points = atof(optarg);
+			num_steps = atof(optarg);
 			break;
 		case 't':
 			threads = atoi(optarg);
@@ -36,23 +36,23 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	double sum = 0;
+	double pi, sum = 0.0;
+	double step = 1.0 / num_steps;
 
 #pragma omp parallel num_threads(threads) reduction(+:sum)
 	{
-		unsigned int seed = (unsigned int)omp_get_wtime();
+		double x = 0.0;
 #pragma omp for
-		for (long i = 0; i < (long)points; i++)
+		for (long i = 0; i < (long)num_steps; i++)
 		{
-			double x = ((double)rand_r(&seed) / RAND_MAX);
-			double y = ((double)rand_r(&seed) / RAND_MAX);
-
-			if (x * x + y * y <= 1)
-			{
-				sum++;
-			}
-		}
+			x = (i+0.5)*step;
+			sum += 4.0/(1.0 + x*x);
+			
+		}		
+		
 	}
+	
+	pi = step * sum;
 
 	clock_gettime(CLOCK_MONOTONIC, &end);
 	double time_taken;
@@ -61,13 +61,12 @@ int main(int argc, char *argv[])
 
 	if (flags == 1)
 	{
-		printf("%.lf\t%d\t%.3lf\n", points, threads, time_taken);
+		printf("%.lf\t%d\t%.3lf\n", num_steps, threads, time_taken);
 	}
 	else
 	{
-		printf("Total number of points: %.1e \n", points);
-		printf("Points within circle: %.1e \n", sum);
-		printf("PI estimation: %0.8lf \n", sum / points * 4.0);
+		printf("Total number of num_steps: %.1e \n", num_steps);
+		printf("PI estimation: %.24lf \n", pi);
 		printf("Execution time (s): %.3lf \n", time_taken);
 	}
 	
