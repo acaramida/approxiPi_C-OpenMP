@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	long sum = 0;
+	double sum = 0;
 
 #pragma omp parallel num_threads(threads) reduction(+:sum)
 	{
@@ -66,8 +66,8 @@ int main(int argc, char *argv[])
 	else
 	{
 		printf("Total number of points: %.1e \n", points);
-		printf("Points within circle: %.1e \n", (double)sum);
-		printf("PI estimation: %0.8lf \n", (double)sum / points * 4.0);
+		printf("Points within circle: %.1e \n", sum);
+		printf("PI estimation: %0.8lf \n", sum / points * 4.0);
 		printf("Execution time (s): %.3lf \n", time_taken);
 	}
 	
