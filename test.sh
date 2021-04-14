@@ -7,5 +7,5 @@ for IT in $ITEREATIONS; do
             ./PI -p $IT -t $TH -b
         done
     done
-done | tee output_file_omp.csv
+done | tee output_file_omp_optimized.csv
 
